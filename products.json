@@ -1,0 +1,29 @@
+[
+  {
+    "id": 1,
+    "name": "سيروم الهيالورونيك اسيد B5",
+    "price": 18000,
+    "badge": "عرض 5+1 مجاناً",
+    "image": "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=500&auto=format&fit=crop&q=60",
+    "colors": ["شفاف"],
+    "description": "ترطيب عميق للبشرة ونضارة فورية تدوم طوال اليوم."
+  },
+  {
+    "id": 2,
+    "name": "أحمر شفاه مخملي مات",
+    "price": 12000,
+    "badge": "3+1 هدية",
+    "image": "https://images.unsplash.com/photo-1586495777744-4413f21062fa?w=500&auto=format&fit=crop&q=60",
+    "colors": ["وردي فاتح", "أحمر كلاسيكي", "نيود طبيعي"],
+    "description": "ثبات عالي بدون تكتل مع لمسة حريرية مخملية."
+  },
+  {
+    "id": 3,
+    "name": "كريم مرطب سيرافيه الأصلي",
+    "price": 22000,
+    "badge": "",
+    "image": "https://images.unsplash.com/photo-1556228720-195a672e8a03?w=500&auto=format&fit=crop&q=60",
+    "colors": ["أبيض أصلي"],
+    "description": "يحتوي على 3 سيراميدات أساسية لحماية حاجز البشرة وترطيبها طوال 24 ساعة."
+  }
+]

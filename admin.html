@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>لوحة التحكم السحابية | كوزمتك المهندس</title>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;600;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>body { font-family: 'Tajawal', sans-serif; background-color: #f9fafb; }</style>
+</head>
+<body class="p-4 sm:p-8">
+  <div class="max-w-4xl mx-auto space-y-6">
+
+    <!-- صندوق إعدادات الربط السحابي مع GitHub -->
+    <div class="bg-white p-6 rounded-3xl border border-pink-200 shadow-sm">
+      <div class="flex items-center justify-between cursor-pointer" onclick="toggleConfig()">
+        <div>
+          <h2 class="text-base font-extrabold text-gray-900">⚙️️ إعدادات ربط لوحة التحكم بـ GitHub (تُملأ لمرة واحدة فقط)</h2>
+          <p class="text-xs text-gray-500 mt-0.5" id="configStatus">اضغط هنا لإدخال أو تعديل مفتاح التحديث السحابي</p>
+        </div>
+        <span class="text-pink-600 font-bold text-sm" id="configToggleText">إظهار</span>
+      </div>
+
+      <div id="configSection" class="hidden mt-4 pt-4 border-t border-gray-100 space-y-3">
+        <div>
+          <label class="block text-xs font-bold text-gray-700 mb-1">اسم حسابك في GitHub (Username)</label>
+          <input type="text" id="ghUser" placeholder="مثال: muhanad" class="w-full px-3 py-2 text-sm border rounded-xl outline-none focus:border-pink-500" dir="ltr">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-gray-700 mb-1">اسم المستودع (Repository Name)</label>
+          <input type="text" id="ghRepo" value="kozmetik-almuhandis" class="w-full px-3 py-2 text-sm border rounded-xl outline-none focus:border-pink-500" dir="ltr">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-gray-700 mb-1">مفتاح الوصول السري (GitHub Token)</label>
+          <input type="password" id="ghToken" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" class="w-full px-3 py-2 text-sm border rounded-xl outline-none focus:border-pink-500" dir="ltr">
+        </div>
+        <button onclick="saveConfig()" class="bg-pink-600 text-white font-bold px-5 py-2 rounded-xl text-xs hover:bg-pink-700">حفظ الإعدادات في متصفحي</button>
+      </div>
+    </div>
+
+    <!-- رأس لوحة التحكم -->
+    <div class="bg-white p-6 rounded-3xl border border-gray-200 shadow-sm flex flex-col sm:flex-row justify-between items-center gap-4">
+      <div>
+        <h1 class="text-2xl font-black text-gray-900">إدارة منتجات كوزمتك المهندس</h1>
+        <p class="text-xs text-gray-500">أي منتج تضيفه أو تعدله هنا سينشر فوراً لكل الزبائن</p>
+      </div>
+      <div class="flex gap-2">
+        <a href="index.html" class="px-4 py-2 border border-gray-300 rounded-xl text-xs font-bold text-gray-700 hover:bg-gray-50">عرض المتجر</a>
+        <button onclick="fetchLatestFromGitHub()" class="px-4 py-2 bg-gray-100 text-gray-800 rounded-xl text-xs font-bold hover:bg-gray-200">🔄 تحديث القائمة</button>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <!-- نموذج إضافة / تعديل منتج -->
+      <div class="bg-white p-6 rounded-3xl border border-gray-200 shadow-sm h-fit">
+        <h2 id="formTitle" class="text-base font-bold text-gray-900 mb-4 pb-2 border-b">إضافة منتج جديد</h2>
+        <form id="productForm" onsubmit="handleProductSubmit(event)" class="space-y-4">
+          <input type="hidden" id="prodId">
+          <div>
+            <label class="block text-xs font-bold text-gray-700 mb-1">اسم المنتج *</label>
+            <input type="text" id="prodName" required placeholder="مثال: سيروم فيتامين سي" class="w-full px-3 py-2 text-sm border rounded-xl outline-none focus:border-pink-500">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-gray-700 mb-1">السعر بالدينار العراقي *</label>
+            <input type="number" id="prodPrice" required placeholder="15000" class="w-full px-3 py-2 text-sm border rounded-xl outline-none focus:border-pink-500">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-gray-700 mb-1">شارة العرض (فوق الصورة) - اختياري</label>
+            <input type="text" id="prodBadge" placeholder="مثال: 5+1 مجاناً" class="w-full px-3 py-2 text-sm border rounded-xl outline-none focus:border-pink-500">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-gray-700 mb-1">الألوان (افصل بينها بفارزة) *</label>
+            <input type="text" id="prodColors" required placeholder="وردي, أبيض, أسود" class="w-full px-3 py-2 text-sm border rounded-xl outline-none focus:border-pink-500">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-gray-700 mb-1">رابط صورة المنتج (URL) *</label>
+            <input type="url" id="prodImage" required placeholder="https://..." class="w-full px-3 py-2 text-sm border rounded-xl outline-none focus:border-pink-500" dir="ltr">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-gray-700 mb-1">وصف المنتج</label>
+            <textarea id="prodDesc" rows="2" class="w-full px-3 py-2 text-sm border rounded-xl outline-none focus:border-pink-500"></textarea>
+          </div>
+
+          <div class="flex gap-2 pt-2">
+            <button type="submit" id="saveBtn" class="flex-1 bg-pink-600 hover:bg-pink-700 text-white font-bold py-2.5 rounded-xl text-sm transition">
+              حفظ ومزامنة مع المتجر
+            </button>
+            <button type="button" onclick="resetForm()" class="px-3 py-2.5 border rounded-xl text-xs font-bold">إلغاء</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- قائمة المنتجات الحالية -->
+      <div class="lg:col-span-2 space-y-3">
+        <h2 class="text-base font-bold text-gray-900">المنتجات المنشورة في المتجر (<span id="prodCount">0</span>)</h2>
+        <div id="adminList" class="space-y-3">
+          <div class="p-8 text-center text-gray-400 bg-white rounded-2xl border">جاري تحميل المنتجات من السيرفر...</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    let currentProducts = [];
+    let fileSha = "";
+
+    function utf8ToBase64(str) {
+      return window.btoa(unescape(encodeURIComponent(str)));
+    }
+    function base64ToUtf8(str) {
+      return decodeURIComponent(escape(window.atob(str)));
+    }
+
+    function toggleConfig() {
+      const sec = document.getElementById('configSection');
+      sec.classList.toggle('hidden');
+      document.getElementById('configToggleText').innerText = sec.classList.contains('hidden') ? 'إظهار' : 'إخفاء';
+    }
+
+    function loadConfig() {
+      const user = localStorage.getItem('km_gh_user') || '';
+      const repo = localStorage.getItem('km_gh_repo') || 'kozmetik-almuhandis';
+      const token = localStorage.getItem('km_gh_token') || '';
+
+      document.getElementById('ghUser').value = user;
+      document.getElementById('ghRepo').value = repo;
+      document.getElementById('ghToken').value = token;
+
+      if (user && token) {
+        document.getElementById('configStatus').innerText = `✅ اللوحة متصلة بحسابك: ${user} / ${repo}`;
+        document.getElementById('configStatus').className = "text-xs text-emerald-600 font-bold mt-0.5";
+      }
+    }
+
+    function saveConfig() {
+      const user = document.getElementById('ghUser').value.trim();
+      const repo = document.getElementById('ghRepo').value.trim();
+      const token = document.getElementById('ghToken').value.trim();
+
+      if (!user || !token) {
+        alert('يرجى ملء اسم المستخدم ورمز Token');
+        return;
+      }
+
+      localStorage.setItem('km_gh_user', user);
+      localStorage.setItem('km_gh_repo', repo);
+      localStorage.setItem('km_gh_token', token);
+
+      alert('تم حفظ الإعدادات بنجاح!');
+      toggleConfig();
+      loadConfig();
+      fetchLatestFromGitHub();
+    }
+
+    async function fetchLatestFromGitHub() {
+      const user = localStorage.getItem('km_gh_user');
+      const repo = localStorage.getItem('km_gh_repo') || 'kozmetik-almuhandis';
+      const token = localStorage.getItem('km_gh_token');
+
+      if (!user || !token) {
+        document.getElementById('adminList').innerHTML = `
+          <div class="bg-amber-50 border border-amber-200 p-6 rounded-2xl text-center text-amber-800 text-sm">
+            يرجى فتح <strong>إعدادات الربط السحابي</strong> في الأعلى وإدخال بيانات GitHub لتبدأ الإدارة.
+          </div>`;
+        return;
+      }
+
+      try {
+        const res = await fetch(`https://api.github.com/repos/${user}/${repo}/contents/products.json`, {
+          headers: {
+            'Authorization': `token ${token}`,
+            'Accept': 'application/vnd.github.v3+json'
+          }
+        });
+
+        if (!res.ok) throw new Error('تعذر العثور على الملف');
+
+        const data = await res.json();
+        fileSha = data.sha;
+        currentProducts = JSON.parse(base64ToUtf8(data.content));
+        renderAdminList();
+      } catch (e) {
+        document.getElementById('adminList').innerHTML = `
+          <div class="bg-red-50 border border-red-200 p-6 rounded-2xl text-center text-red-700 text-sm">
+            حدث خطأ في جلب المنتجات. تأكد من صحة بيانات Token واسم المستودع.
+          </div>`;
+      }
+    }
+
+    function renderAdminList() {
+      const container = document.getElementById('adminList');
+      const count = document.getElementById('prodCount');
+      count.innerText = currentProducts.length;
+      container.innerHTML = '';
+
+      if (currentProducts.length === 0) {
+        container.innerHTML = `<div class="p-6 text-center text-gray-400 bg-white rounded-2xl border">لا توجد منتجات حتى الآن.</div>`;
+        return;
+      }
+
+      currentProducts.forEach((p, idx) => {
+        const item = document.createElement('div');
+        item.className = "bg-white p-4 rounded-2xl border border-gray-200 flex items-center justify-between gap-3";
+        item.innerHTML = `
+          <div class="flex items-center gap-3">
+            <img src="${p.image}" class="w-12 h-12 object-cover rounded-xl border">
+            <div>
+              <div class="flex items-center gap-2">
+                <h4 class="font-bold text-gray-900 text-sm">${p.name}</h4>
+                ${p.badge ? `<span class="bg-pink-100 text-pink-700 text-[10px] font-bold px-2 py-0.5 rounded-full">${p.badge}</span>` : ''}
+              </div>
+              <p class="text-xs text-gray-500 font-semibold">${Number(p.price).toLocaleString()} د.ع | الألوان: ${(p.colors || []).join(', ')}</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <button onclick="editItem(${idx})" class="px-3 py-1 bg-gray-100 hover:bg-gray-200 text-xs font-bold rounded-lg">تعديل</button>
+            <button onclick="deleteItem(${idx})" class="px-3 py-1 bg-red-50 hover:bg-red-100 text-red-600 text-xs font-bold rounded-lg">حذف</button>
+          </div>
+        `;
+        container.appendChild(item);
+      });
+    }
+
+    async function syncToGitHub(updatedList) {
+      const user = localStorage.getItem('km_gh_user');
+      const repo = localStorage.getItem('km_gh_repo');
+      const token = localStorage.getItem('km_gh_token');
+      const saveBtn = document.getElementById('saveBtn');
+
+      saveBtn.disabled = true;
+      saveBtn.innerText = "جاري النشر والمزامنة السحابية...";
+
+      try {
+        const jsonString = JSON.stringify(updatedList, null, 2);
+        const contentBase64 = utf8ToBase64(jsonString);
+
+        const res = await fetch(`https://api.github.com/repos/${user}/${repo}/contents/products.json`, {
+          method: 'PUT',
+          headers: {
+            'Authorization': `token ${token}`,
+            'Accept': 'application/vnd.github.v3+json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            message: 'Update products from store admin',
+            content: contentBase64,
+            sha: fileSha
+          })
+        });
+
+        if (!res.ok) throw new Error('فشلت المزامنة');
+
+        const resData = await res.json();
+        fileSha = resData.content.sha;
+        currentProducts = updatedList;
+        renderAdminList();
+        resetForm();
+        alert('تم نشر وتحديث المنتجات لجميع الزبائن بنجاح! 🚀');
+      } catch (e) {
+        alert('حدث خطأ أثناء المزامنة، تأكد من الاتصال وصلاحيات Token');
+      } finally {
+        saveBtn.disabled = false;
+        saveBtn.innerText = "حفظ ومزامنة مع المتجر";
+      }
+    }
+
+    function handleProductSubmit(e) {
+      e.preventDefault();
+      const id = document.getElementById('prodId').value;
+      const name = document.getElementById('prodName').value.trim();
+      const price = parseInt(document.getElementById('prodPrice').value);
+      const badge = document.getElementById('prodBadge').value.trim();
+      const colors = document.getElementById('prodColors').value.split(',').map(c => c.trim()).filter(Boolean);
+      const image = document.getElementById('prodImage').value.trim();
+      const description = document.getElementById('prodDesc').value.trim();
+
+      let newList = [...currentProducts];
+
+      if (id) {
+        const idx = newList.findIndex(p => p.id == id);
+        if (idx > -1) {
+          newList[idx] = { ...newList[idx], name, price, badge, colors, image, description };
+        }
+      } else {
+        newList.unshift({
+          id: Date.now(),
+          name, price, badge, colors, image, description
+        });
+      }
+
+      syncToGitHub(newList);
+    }
+
+    function editItem(idx) {
+      const p = currentProducts[idx];
+      document.getElementById('formTitle').innerText = "تعديل المنتج";
+      document.getElementById('prodId').value = p.id;
+      document.getElementById('prodName').value = p.name;
+      document.getElementById('prodPrice').value = p.price;
+      document.getElementById('prodBadge').value = p.badge || '';
+      document.getElementById('prodColors').value = (p.colors || []).join(', ');
+      document.getElementById('prodImage').value = p.image;
+      document.getElementById('prodDesc').value = p.description || '';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function deleteItem(idx) {
+      if (confirm('هل أنت متأكد من رغبتك بحذف هذا المنتج نهائياً من المتجر؟')) {
+        let newList = [...currentProducts];
+        newList.splice(idx, 1);
+        syncToGitHub(newList);
+      }
+    }
+
+    function resetForm() {
+      document.getElementById('formTitle').innerText = "إضافة منتج جديد";
+      document.getElementById('productForm').reset();
+      document.getElementById('prodId').value = '';
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      loadConfig();
+      fetchLatestFromGitHub();
+    });
+  </script>
+</body>
+</html>

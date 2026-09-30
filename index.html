@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>كوزمتك المهندس | المتجر الإلكتروني</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { tajawal: ['Tajawal', 'sans-serif'] },
+          colors: {
+            brand: {
+              pink: '#db2777',
+              pinkHover: '#be185d',
+              pinkLight: '#fdf2f8',
+              dark: '#111827'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { font-family: 'Tajawal', sans-serif; background-color: #ffffff; color: #111827; }
+  </style>
+</head>
+<body class="bg-white text-brand-dark min-h-screen flex flex-col antialiased">
+
+  <!-- إعلان التوصيل العلوي -->
+  <div class="bg-brand-pinkLight border-b border-pink-100 py-2.5 px-4 text-center text-xs md:text-sm font-bold text-brand-pink">
+    🚚 توصيل سريع لجميع محافظات العراق بـ 5,000 دينار فقط | الدفع عند الاستلام
+  </div>
+
+  <!-- الهيدر -->
+  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-gray-100 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-11 h-11 rounded-full bg-brand-pink text-white flex items-center justify-center font-extrabold text-xl shadow-md shadow-pink-200">
+          م
+        </div>
+        <div>
+          <h1 class="text-2xl font-black tracking-tight text-brand-dark">كوزمتك المهندس</h1>
+          <p class="text-xs text-gray-500 font-medium">عناية، جمال، وأصالة</p>
+        </div>
+      </div>
+
+      <button onclick="toggleCart()" class="relative p-2.5 rounded-full border border-gray-200 hover:border-brand-pink text-brand-dark hover:text-brand-pink transition-all flex items-center gap-2">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+        </svg>
+        <span class="hidden sm:inline font-bold text-sm">السلة</span>
+        <span id="cartCount" class="absolute -top-1 -right-1 bg-brand-pink text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold">0</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- بنر ترحيبي -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+    <div class="bg-gradient-to-l from-pink-50 via-white to-pink-50 border border-pink-100 rounded-3xl p-6 sm:p-10 text-center shadow-sm">
+      <span class="inline-block py-1 px-3 bg-brand-pink text-white text-xs font-bold rounded-full mb-3">منتجات أصلية 100%</span>
+      <h2 class="text-2xl sm:text-4xl font-extrabold text-brand-dark mb-2">تسوق بكل ثقة مع كوزمتك المهندس</h2>
+      <p class="text-gray-600 max-w-xl mx-auto text-sm sm:text-base">اختر منتجك المفضل وسجل طلبك بضغطة زر ليصلك حتى باب بيتك والدفع عند الاستلام.</p>
+    </div>
+  </section>
+
+  <!-- شبكة المنتجات -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20 flex-1 w-full">
+    <h3 class="text-xl sm:text-2xl font-black text-brand-dark border-r-4 border-brand-pink pr-3 mb-8">المنتجات والعروض الحالية</h3>
+    <div id="productsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"></div>
+  </main>
+
+  <!-- نافذة السلة الجانبية -->
+  <div id="cartModal" class="fixed inset-0 z-50 overflow-hidden hidden">
+    <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" onclick="toggleCart()"></div>
+    <div class="fixed inset-y-0 left-0 max-w-full flex">
+      <div class="w-screen max-w-md bg-white shadow-2xl flex flex-col">
+        <div class="p-6 border-b border-gray-100 flex items-center justify-between">
+          <h2 class="text-lg font-black text-brand-dark">سلة المشتريات</h2>
+          <button onclick="toggleCart()" class="text-gray-400 hover:text-brand-dark text-lg font-bold">✕</button>
+        </div>
+        <div id="cartItemsContainer" class="flex-1 overflow-y-auto p-6 space-y-4 divide-y divide-gray-100"></div>
+        <div id="cartFooter" class="p-6 border-t border-gray-100 bg-gray-50/50 space-y-3">
+          <div class="flex justify-between text-sm text-gray-600"><span>مجموع المنتجات:</span><span id="subtotalPrice" class="font-bold text-brand-dark">0 د.ع</span></div>
+          <div class="flex justify-between text-sm text-brand-pink font-semibold"><span>أجور التوصيل:</span><span>5,000 د.ع</span></div>
+          <div class="border-t border-gray-200 pt-2 flex justify-between text-base font-extrabold text-brand-dark">
+            <span>المجموع الكلي:</span><span id="finalTotalPrice" class="text-brand-pink">5,000 د.ع</span>
+          </div>
+          <button onclick="openCheckoutModal()" class="w-full mt-4 bg-brand-pink hover:bg-brand-pinkHover text-white py-3.5 px-4 rounded-xl font-bold flex items-center justify-center gap-2 shadow-lg shadow-pink-200 transition">
+            <span>إتمام الطلب</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- نافذة إتمام الطلب -->
+  <div id="checkoutModal" class="fixed inset-0 z-50 overflow-y-auto hidden">
+    <div class="flex items-center justify-center min-h-screen px-4 py-8">
+      <div class="fixed inset-0 bg-black/50 backdrop-blur-sm" onclick="closeCheckoutModal()"></div>
+      <div class="relative bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border border-gray-100 z-10 text-right">
+        <div class="flex justify-between items-center pb-4 border-b border-gray-100 mb-5">
+          <h3 class="text-xl font-black text-brand-dark">تأكيد الطلب (الدفع عند الاستلام)</h3>
+          <button onclick="closeCheckoutModal()" class="text-gray-400 hover:text-brand-dark font-bold">✕</button>
+        </div>
+
+        <div class="mb-5 p-4 rounded-2xl bg-pink-50 border border-pink-200 text-brand-dark flex items-start gap-3">
+          <span class="text-brand-pink text-xl">🚚</span>
+          <div class="text-sm font-medium leading-relaxed">
+            <strong class="text-brand-pink font-bold">ملاحظة هامة:</strong>
+            سعر التوصيل لجميع أنحاء العراق هو <span class="font-bold text-brand-pink">5,000 دينار فقط</span>، والدفع يتم عند استلام طلبك.
+          </div>
+        </div>
+
+        <form id="orderForm" onsubmit="handleOrderSubmit(event)" class="space-y-4">
+          <div>
+            <label class="block text-xs font-bold text-gray-700 mb-1">الاسم الكامل *</label>
+            <input type="text" id="custName" required placeholder="مثال: علي محمد" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:border-brand-pink text-sm">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-gray-700 mb-1">رقم الهاتف *</label>
+            <input type="tel" id="custPhone" required placeholder="0770XXXXXXX" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:border-brand-pink text-sm text-left" dir="ltr">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-gray-700 mb-1">المحافظة والعنوان بالتفصيل *</label>
+            <input type="text" id="custAddress" required placeholder="مثال: كربلاء - حي الحسين" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:border-brand-pink text-sm">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-gray-700 mb-1">أقرب نقطة دالة *</label>
+            <input type="text" id="custLandmark" required placeholder="مثال: قرب صيدلية الرافدين" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:border-brand-pink text-sm">
+          </div>
+
+          <div class="bg-gray-50 p-4 rounded-xl border border-gray-200 space-y-1 text-xs text-gray-600">
+            <div class="flex justify-between"><span>مجموع المنتجات:</span><span id="checkoutSubtotal" class="font-bold text-brand-dark">0 د.ع</span></div>
+            <div class="flex justify-between"><span>أجور التوصيل:</span><span class="font-bold text-brand-pink">5,000 د.ع</span></div>
+            <div class="flex justify-between text-sm font-extrabold text-brand-dark pt-1 border-t border-gray-200">
+              <span>المبلغ المطلوب:</span><span id="checkoutTotal" class="text-brand-pink">0 د.ع</span>
+            </div>
+          </div>
+
+          <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 px-4 rounded-xl shadow-lg transition flex items-center justify-center gap-2">
+            <span>إرسال الطلب عبر واتساب</span>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- الفوتر -->
+  <footer class="bg-gray-50 border-t border-gray-100 py-6 text-center text-xs text-gray-500">
+    <p>كوزمتك المهندس © جميع الحقوق محفوظة</p>
+    <a href="admin.html" class="text-brand-pink font-bold hover:underline mt-2 inline-block">لوحة التحكم السحابية</a>
+  </footer>
+
+  <script>
+    // ⚠️ استبدل الرقم التالي برقم هاتفك بصيغة 964 وبدون الصفر الأول
+    const STORE_WHATSAPP_NUMBER = "9647766143081"; 
+    const SHIPPING_COST = 5000;
+
+    let products = [];
+    let cart = [];
+
+    async function loadProducts() {
+      try {
+        const res = await fetch('products.json?t=' + Date.now());
+        if (!res.ok) throw new Error();
+        products = await res.json();
+      } catch (e) {
+        console.error('تعذر جلب المنتجات');
+      }
+      renderProducts();
+    }
+
+    function renderProducts() {
+      const container = document.getElementById('productsGrid');
+      container.innerHTML = '';
+
+      products.forEach(product => {
+        const badgeHTML = product.badge && product.badge.trim() !== ''
+          ? `<span class="absolute top-3 right-3 bg-brand-pink text-white text-xs font-black px-3 py-1 rounded-full shadow-md z-10">${product.badge}</span>`
+          : '';
+
+        const colorsHTML = (product.colors || []).map((color, index) => `
+          <label class="cursor-pointer text-xs flex items-center gap-1 bg-gray-50 border border-gray-200 rounded-lg px-2.5 py-1 hover:border-brand-pink transition has-[:checked]:border-brand-pink has-[:checked]:bg-pink-50">
+            <input type="radio" name="color-${product.id}" value="${color}" ${index === 0 ? 'checked' : ''} class="accent-brand-pink">
+            <span class="font-medium text-gray-800">${color}</span>
+          </label>
+        `).join('');
+
+        const card = document.createElement('div');
+        card.className = "bg-white rounded-3xl border border-gray-100 overflow-hidden shadow-sm hover:shadow-lg transition flex flex-col justify-between";
+        card.innerHTML = `
+          <div class="relative overflow-hidden bg-gray-50 aspect-square">
+            ${badgeHTML}
+            <img src="${product.image}" alt="${product.name}" class="w-full h-full object-cover">
+          </div>
+          <div class="p-5 flex-1 flex flex-col justify-between space-y-4">
+            <div>
+              <h4 class="font-bold text-lg text-brand-dark mb-1">${product.name}</h4>
+              <p class="text-xs text-gray-500 line-clamp-2">${product.description || ''}</p>
+            </div>
+            <div class="space-y-3">
+              <div>
+                <span class="text-xs font-bold text-gray-600 block mb-1.5">اختر اللون:</span>
+                <div class="flex flex-wrap gap-1.5">${colorsHTML}</div>
+              </div>
+              <div class="flex items-center justify-between pt-3 border-t border-gray-100">
+                <span class="text-lg font-black text-brand-dark">${Number(product.price).toLocaleString()} <span class="text-xs font-medium text-gray-500">د.ع</span></span>
+                <div class="flex items-center border border-gray-200 rounded-xl overflow-hidden bg-gray-50">
+                  <button onclick="adjustQty(${product.id}, -1)" class="px-2.5 py-1 text-gray-600 hover:bg-gray-200 font-bold">-</button>
+                  <span id="qty-${product.id}" class="px-2 text-sm font-bold text-brand-dark">1</span>
+                  <button onclick="adjustQty(${product.id}, 1)" class="px-2.5 py-1 text-gray-600 hover:bg-gray-200 font-bold">+</button>
+                </div>
+              </div>
+              <button onclick="addToCart(${product.id})" class="w-full bg-brand-pink hover:bg-brand-pinkHover text-white py-3 rounded-xl font-bold text-sm shadow-md transition">
+                إضافة إلى السلة
+              </button>
+            </div>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function adjustQty(id, delta) {
+      const el = document.getElementById(`qty-${id}`);
+      let val = Math.max(1, parseInt(el.innerText) + delta);
+      el.innerText = val;
+    }
+
+    function addToCart(productId) {
+      const product = products.find(p => p.id === productId);
+      const quantity = parseInt(document.getElementById(`qty-${productId}`).innerText);
+      const selectedColorInput = document.querySelector(`input[name="color-${productId}"]:checked`);
+      const selectedColor = selectedColorInput ? selectedColorInput.value : (product.colors[0] || "افتراضي");
+
+      const idx = cart.findIndex(i => i.id === productId && i.selectedColor === selectedColor);
+      if (idx > -1) {
+        cart[idx].quantity += quantity;
+      } else {
+        cart.push({ ...product, quantity, selectedColor });
+      }
+
+      document.getElementById(`qty-${productId}`).innerText = 1;
+      updateCartUI();
+      toggleCart(true);
+    }
+
+    function updateCartUI() {
+      const countEl = document.getElementById('cartCount');
+      const container = document.getElementById('cartItemsContainer');
+      const footer = document.getElementById('cartFooter');
+      const subtotalEl = document.getElementById('subtotalPrice');
+      const finalEl = document.getElementById('finalTotalPrice');
+
+      const totalItems = cart.reduce((acc, item) => acc + item.quantity, 0);
+      countEl.innerText = totalItems;
+
+      if (cart.length === 0) {
+        container.innerHTML = `<div class="text-center py-12 text-gray-400 font-bold">السلة فارغة</div>`;
+        footer.classList.add('hidden');
+        return;
+      }
+
+      footer.classList.remove('hidden');
+      container.innerHTML = '';
+      let subtotal = 0;
+
+      cart.forEach((item, idx) => {
+        const itemTotal = item.price * item.quantity;
+        subtotal += itemTotal;
+        const row = document.createElement('div');
+        row.className = "py-3 flex gap-3 items-center justify-between";
+        row.innerHTML = `
+          <div class="flex-1">
+            <h5 class="text-sm font-bold">${item.name}</h5>
+            <p class="text-xs text-brand-pink font-semibold">اللون: ${item.selectedColor} | العدد: ${item.quantity}</p>
+            <span class="text-xs font-black">${itemTotal.toLocaleString()} د.ع</span>
+          </div>
+          <button onclick="removeCartItem(${idx})" class="text-red-500 font-bold p-1">✕</button>
+        `;
+        container.appendChild(row);
+      });
+
+      subtotalEl.innerText = `${subtotal.toLocaleString()} د.ع`;
+      finalEl.innerText = `${(subtotal + SHIPPING_COST).toLocaleString()} د.ع`;
+    }
+
+    function removeCartItem(idx) {
+      cart.splice(idx, 1);
+      updateCartUI();
+    }
+
+    function toggleCart(forceOpen = false) {
+      const modal = document.getElementById('cartModal');
+      if (forceOpen) modal.classList.remove('hidden');
+      else modal.classList.toggle('hidden');
+    }
+
+    function openCheckoutModal() {
+      if (cart.length === 0) return;
+      toggleCart(false);
+      const subtotal = cart.reduce((acc, item) => acc + (item.price * item.quantity), 0);
+      document.getElementById('checkoutSubtotal').innerText = `${subtotal.toLocaleString()} د.ع`;
+      document.getElementById('checkoutTotal').innerText = `${(subtotal + SHIPPING_COST).toLocaleString()} د.ع`;
+      document.getElementById('checkoutModal').classList.remove('hidden');
+    }
+
+    function closeCheckoutModal() {
+      document.getElementById('checkoutModal').classList.add('hidden');
+    }
+
+    function handleOrderSubmit(e) {
+      e.preventDefault();
+      const name = document.getElementById('custName').value.trim();
+      const phone = document.getElementById('custPhone').value.trim();
+      const address = document.getElementById('custAddress').value.trim();
+      const landmark = document.getElementById('custLandmark').value.trim();
+
+      const subtotal = cart.reduce((acc, item) => acc + (item.price * item.quantity), 0);
+      const total = subtotal + SHIPPING_COST;
+
+      let itemsText = "";
+      cart.forEach((item, i) => {
+        const offer = item.badge ? ` [${item.badge}]` : '';
+        itemsText += `${i + 1}. *${item.name}* ${offer}\n   - اللون: ${item.selectedColor}\n   - العدد: ${item.quantity} قطعة\n   - السعر: ${(item.price * item.quantity).toLocaleString()} د.ع\n`;
+      });
+
+      const msg = 
+`🌸 *طلب جديد من متجر كوزمتك المهندس* 🌸
+--------------------------------
+📦 *المنتجات المطلوبة:*
+${itemsText}
+--------------------------------
+💵 *مجموع المنتجات:* ${subtotal.toLocaleString()} دينار
+🚚 *أجور التوصيل:* 5,000 دينار (كافة أنحاء العراق)
+💰 *المبلغ النهائي للدفع:* ${total.toLocaleString()} دينار عراقي
+💳 *طريقة الدفع:* نقداً عند الاستلام
+--------------------------------
+👤 *معلومات الزبون:*
+- *الاسم:* ${name}
+- *رقم الهاتف:* ${phone}
+- *المحافظة والعنوان:* ${address}
+- *أقرب نقطة دالة:* ${landmark}
+--------------------------------`;
+
+      window.open(`https://api.whatsapp.com/send?phone=${STORE_WHATSAPP_NUMBER}&text=${encodeURIComponent(msg)}`, '_blank');
+      cart = [];
+      updateCartUI();
+      closeCheckoutModal();
+      document.getElementById('orderForm').reset();
+    }
+
+    window.addEventListener('DOMContentLoaded', loadProducts);
+  </script>
+</body>
+</html>
