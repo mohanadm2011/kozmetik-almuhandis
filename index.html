@@ -32,24 +32,30 @@
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-    /* شريط متحرك مستمر لا نهائي من اليسار إلى اليمين */
+    /* شريط متحرك مستمر لا نهائي وسريع من اليسار إلى اليمين بدون فراغات */
     @keyframes marquee-ltr {
-      0% { transform: translateX(-50%); }
+      0% { transform: translateX(-100%); }
       100% { transform: translateX(0%); }
     }
-    .marquee-infinite {
+    .marquee-track {
       display: flex;
-      width: 200%;
-      animation: marquee-ltr 22s linear infinite;
+      width: max-content;
+      user-select: none;
     }
-    .marquee-infinite:hover {
+    .marquee-group {
+      display: flex;
+      align-items: center;
+      flex-shrink: 0;
+      animation: marquee-ltr 10s linear infinite;
+    }
+    .marquee-track:hover .marquee-group {
       animation-play-state: paused;
     }
   </style>
 </head>
 <body class="bg-white text-brand-dark min-h-screen flex flex-col antialiased">
 
-  <!-- إشعار إضافة المنتج للسلة (Toast Notification) -->
+  <!-- إشعار إضافة المنتج للسلة -->
   <div id="toastNotification" class="fixed top-5 left-1/2 -translate-x-1/2 z-50 bg-brand-dark text-white px-5 py-3 rounded-2xl shadow-2xl flex items-center gap-3 transition-all duration-300 opacity-0 pointer-events-none translate-y-[-20px]">
     <span class="text-emerald-400 font-black text-lg">✓</span>
     <span id="toastMessage" class="text-xs sm:text-sm font-bold">تمت إضافة المنتج إلى السلة بنجاح!</span>
@@ -76,10 +82,10 @@
       <!-- الجانب الأيسر: أيقونات التواصل الاجتماعي والسلة -->
       <div class="flex items-center gap-1.5 sm:gap-2.5">
         
-        <!-- أيقونة واتساب المباشرة برقمك -->
-        <a href="https://wa.me/9647766143081" target="_blank" title="تواصل عبر واتساب" class="w-9 h-9 sm:w-10 sm:h-10 rounded-full border border-gray-200 bg-emerald-50 text-emerald-600 hover:bg-emerald-600 hover:text-white flex items-center justify-center transition shadow-sm">
-          <svg class="w-4 h-4 sm:w-5 sm:h-5 fill-current" viewBox="0 0 24 24">
-            <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/>
+        <!-- أيقونة واتساب الرسمية المعتمدة -->
+        <a href="https://wa.me/9647766143081" target="_blank" title="تواصل عبر واتساب" class="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[#25D366] hover:bg-[#20ba5a] text-white flex items-center justify-center transition shadow-sm shadow-emerald-200 shrink-0">
+          <svg class="w-5 h-5 sm:w-6 sm:h-6 fill-current" viewBox="0 0 24 24">
+            <path d="M12.01 0C5.38 0 .01 5.37.01 12c0 2.12.55 4.17 1.6 5.98L0 24l6.19-1.62C7.94 23.37 9.94 24 12.01 24c6.63 0 12-5.37 12-12S18.64 0 12.01 0zm.01 22.08c-1.8 0-3.56-.48-5.1-1.39l-.37-.22-3.79.99 1.01-3.69-.24-.38a9.98 9.98 0 0 1-1.53-5.39c0-5.56 4.52-10.08 10.08-10.08 5.56 0 10.08 4.52 10.08 10.08 0 5.56-4.52 10.08-10.08 10.08zm5.53-7.55c-.3-.15-1.78-.88-2.06-.98-.28-.1-.48-.15-.68.15-.2.3-.78.98-.95 1.18-.18.2-.35.23-.65.08-.3-.15-1.27-.47-2.42-1.5-.89-.79-1.49-1.77-1.66-2.07-.18-.3-.02-.46.13-.61.13-.13.3-.35.45-.53.15-.18.2-.3.3-.5.1-.2.05-.38-.03-.53-.08-.15-.68-1.63-.93-2.23-.24-.58-.49-.5-.68-.51h-.58c-.2 0-.53.08-.8.38-.28.3-1.05 1.03-1.05 2.5 0 1.48 1.08 2.9 1.23 3.1.15.2 2.12 3.24 5.14 4.54.72.31 1.28.5 1.72.64.72.23 1.38.2 1.9.12.58-.09 1.78-.73 2.03-1.43.25-.7.25-1.3.18-1.43-.07-.13-.27-.2-.57-.35z"/>
           </svg>
         </a>
 
@@ -110,22 +116,22 @@
     </div>
   </header>
 
-  <!-- الشريط الإخباري المتحرك (حركة مستمرة لا نهائية من اليسار إلى اليمين) -->
-  <div class="bg-brand-pinkLight border-b border-pink-100 py-2.5 overflow-hidden relative">
-    <div class="marquee-infinite whitespace-nowrap">
-      <div class="flex items-center gap-8 px-4 w-1/2 justify-around">
-        <span class="text-xs sm:text-sm font-black text-brand-pink">
+  <!-- الشريط الإخباري المتحرك (سريع، مستمر، وبدون فراغات) -->
+  <div class="bg-brand-pinkLight border-b border-pink-100 py-2.5 overflow-hidden" dir="ltr">
+    <div class="marquee-track">
+      <div class="marquee-group">
+        <span class="text-xs sm:text-sm font-black text-brand-pink px-6" dir="rtl">
           ✨ عرض لفترة محدودة ، عند الطلب بقيمة 25000 دينار فاكثر يكون التوصيل مجاني لكافة انحاء العراق ✨
         </span>
-        <span class="text-xs sm:text-sm font-black text-brand-pink">
+        <span class="text-xs sm:text-sm font-black text-brand-pink px-6" dir="rtl">
           🌸 كوزمتك المهندس | منتجات أصلية 100% ودفع عند الاستلام 🌸
         </span>
       </div>
-      <div class="flex items-center gap-8 px-4 w-1/2 justify-around">
-        <span class="text-xs sm:text-sm font-black text-brand-pink">
+      <div class="marquee-group" aria-hidden="true">
+        <span class="text-xs sm:text-sm font-black text-brand-pink px-6" dir="rtl">
           ✨ عرض لفترة محدودة ، عند الطلب بقيمة 25000 دينار فاكثر يكون التوصيل مجاني لكافة انحاء العراق ✨
         </span>
-        <span class="text-xs sm:text-sm font-black text-brand-pink">
+        <span class="text-xs sm:text-sm font-black text-brand-pink px-6" dir="rtl">
           🌸 كوزمتك المهندس | منتجات أصلية 100% ودفع عند الاستلام 🌸
         </span>
       </div>
@@ -192,7 +198,7 @@
     <div id="productsGrid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2.5 sm:gap-6"></div>
   </main>
 
-  <!-- نافذة تفاصيل المنتج الكاملة (Product Details Modal) -->
+  <!-- نافذة تفاصيل المنتج الكاملة -->
   <div id="productDetailsModal" class="fixed inset-0 z-50 overflow-y-auto hidden">
     <div class="flex items-center justify-center min-h-screen px-3 sm:px-4 py-6">
       <div class="fixed inset-0 bg-black/60 backdrop-blur-sm" onclick="closeProductModal()"></div>
@@ -202,24 +208,20 @@
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-5 items-center">
           
-          <!-- معرض الصور مع التمرير -->
           <div class="relative bg-gray-50 rounded-2xl overflow-hidden aspect-square flex flex-col justify-between">
             <div id="modalOutOfStockRibbon"></div>
             <div id="modalBadge"></div>
             
             <img id="modalMainImage" src="" class="w-full h-full object-cover">
 
-            <!-- أزرار التمرير للصور -->
             <div id="modalSliderControls" class="absolute inset-x-2 top-1/2 -translate-y-1/2 flex justify-between pointer-events-none hidden">
               <button onclick="prevModalImage()" class="pointer-events-auto w-8 h-8 rounded-full bg-white/80 hover:bg-white text-gray-800 shadow-md flex items-center justify-center font-black text-sm">❯</button>
               <button onclick="nextModalImage()" class="pointer-events-auto w-8 h-8 rounded-full bg-white/80 hover:bg-white text-gray-800 shadow-md flex items-center justify-center font-black text-sm">❮</button>
             </div>
 
-            <!-- مؤشرات الصور المصغرة -->
             <div id="modalImageDots" class="absolute bottom-2 inset-x-0 flex justify-center gap-1.5 py-1 z-10"></div>
           </div>
 
-          <!-- معلومات المنتج والطلب -->
           <div class="flex flex-col justify-between h-full space-y-3.5">
             <div>
               <span id="modalCategory" class="text-xs font-bold text-brand-pink block"></span>
@@ -264,7 +266,6 @@
           <button onclick="toggleCart()" class="text-gray-400 hover:text-brand-dark font-bold text-lg p-1">✕</button>
         </div>
 
-        <!-- قائمة عناصر السلة مع صلاحية تعديل العدد -->
         <div id="cartItemsContainer" class="flex-1 overflow-y-auto p-4 sm:p-5 space-y-3 divide-y divide-gray-100"></div>
 
         <div id="cartFooter" class="p-5 border-t border-gray-100 bg-gray-50/50 space-y-2.5">
@@ -291,7 +292,7 @@
     </div>
   </div>
 
-  <!-- نافذة إتمام الطلب (Checkout) -->
+  <!-- نافذة إتمام الطلب -->
   <div id="checkoutModal" class="fixed inset-0 z-50 overflow-y-auto hidden">
     <div class="flex items-center justify-center min-h-screen px-3 sm:px-4 py-8">
       <div class="fixed inset-0 bg-black/50 backdrop-blur-sm" onclick="closeCheckoutModal()"></div>
@@ -344,7 +345,7 @@
   </footer>
 
   <script>
-    const STORE_WHATSAPP_NUMBER = "9647766143081"; // رقم هاتفك الرسمي المعتمد
+    const STORE_WHATSAPP_NUMBER = "9647766143081";
     const FREE_SHIPPING_THRESHOLD = 25000;
     const STANDARD_SHIPPING_COST = 5000;
 
@@ -352,7 +353,6 @@
     let activeCategory = 'الكل';
     let cart = [];
 
-    // متغيرات نافذة المنتج المعروض
     let currentModalProduct = null;
     let currentModalImgIndex = 0;
     let currentModalImages = [];
@@ -380,7 +380,6 @@
       renderProducts();
     }
 
-    // استخراج مصفوفة الصور لكل منتج (يدعم الصور المتعددة والصور القديمة الفردية)
     function getProductImages(product) {
       if (Array.isArray(product.images) && product.images.length > 0) {
         return product.images;
@@ -423,7 +422,6 @@
           ? `<span class="absolute top-2 right-2 bg-brand-pink text-white text-[10px] sm:text-xs font-black px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full shadow-sm z-10">${product.badge}</span>`
           : '';
 
-        // معرض صور قابل للتمرير باللمس في البطاقة إذا كان هناك أكثر من صورة
         const galleryImagesHTML = images.map(img => `
           <div class="w-full h-full flex-shrink-0 snap-center">
             <img src="${img}" alt="${product.name}" class="w-full h-full object-cover ${isOutOfStock ? 'grayscale-[25%]' : ''}">
@@ -503,7 +501,6 @@
       });
     }
 
-    // نافذة تفاصيل المنتج الكاملة
     function openProductModal(productId) {
       const product = products.find(p => p.id === productId);
       if (!product) return;
@@ -519,7 +516,6 @@
       document.getElementById('modalPrice').innerHTML = `${Number(product.price).toLocaleString()} <span class="text-xs text-gray-500 font-semibold">دينار عراقي</span>`;
       document.getElementById('modalDescription').innerText = product.description || 'لا يوجد وصف إضافي متوفر لهذا المنتج.';
 
-      // الشارة وحالة التوفر
       const ribbon = document.getElementById('modalOutOfStockRibbon');
       const badge = document.getElementById('modalBadge');
       const btn = document.getElementById('modalAddToCartBtn');
@@ -543,7 +539,6 @@
         btn.onclick = () => addModalProductToCart();
       }
 
-      // خيارات الألوان في المودال
       const colorSection = document.getElementById('modalColorSection');
       if (product.colors && product.colors.length > 0 && !isOutOfStock) {
         const colorOptions = product.colors.map((c, i) => `
@@ -626,7 +621,6 @@
       el.innerText = val;
     }
 
-    // إضافة المنتج وبقاء الزبون في نفس الصفحة
     function addToCart(productId) {
       const product = products.find(p => p.id === productId);
       if (!product || product.outOfStock) return;
@@ -653,7 +647,6 @@
       showToast(`تمت إضافة "${product.name}" إلى السلة 🛍️`);
     }
 
-    // إظهار تنبيه لطيف عند الإضافة
     function showToast(msg) {
       const toast = document.getElementById('toastNotification');
       document.getElementById('toastMessage').innerText = msg;
@@ -670,7 +663,6 @@
       return subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : STANDARD_SHIPPING_COST;
     }
 
-    // تحديث السلة مع توفير أزرار زيادة ونقصان الكمية
     function updateCartUI() {
       const countEl = document.getElementById('cartCount');
       const container = document.getElementById('cartItemsContainer');
@@ -707,7 +699,6 @@
             <p class="text-[11px] text-brand-pink font-semibold">${colorLabel}</p>
             <div class="flex items-center justify-between mt-1.5">
               
-              <!-- عداد تعديل كمية القطع في السلة -->
               <div class="flex items-center border border-gray-200 rounded-lg bg-gray-50 text-xs">
                 <button onclick="changeCartItemQty(${idx}, -1)" class="px-2 py-0.5 font-bold text-gray-700 hover:bg-gray-200">-</button>
                 <span class="px-2 font-black text-brand-dark">${item.quantity}</span>
