@@ -42,7 +42,7 @@
     <div class="bg-white p-5 rounded-3xl border border-gray-200 shadow-sm flex flex-col sm:flex-row justify-between items-center gap-4">
       <div>
         <h1 class="text-xl sm:text-2xl font-black text-gray-900">إدارة منتجات كوزمتك المهندس</h1>
-        <p class="text-xs text-gray-500">تحكم بالأقسام، العروض، وحالة توفر المنتجات</p>
+        <p class="text-xs text-gray-500">إضافة صور متعددة، الأقسام، العروض، وحالة التوفر</p>
       </div>
       <div class="flex gap-2 w-full sm:w-auto">
         <a href="index.html" class="flex-1 sm:flex-initial text-center px-4 py-2 border border-gray-300 rounded-xl text-xs font-bold text-gray-700 hover:bg-gray-50">عرض المتجر</a>
@@ -78,7 +78,6 @@
             <input type="number" id="prodPrice" required placeholder="15000" class="w-full px-3 py-2 text-sm border rounded-xl outline-none focus:border-pink-500">
           </div>
 
-          <!-- خيار توفر المنتج (غير متوفر) -->
           <div class="p-3 bg-pink-50/60 rounded-xl border border-pink-200 flex items-center justify-between">
             <label for="prodOutOfStock" class="text-xs font-bold text-gray-800 cursor-pointer">
               وضع المنتج كـ <span class="text-pink-700 font-extrabold">"غير متوفر"</span>
@@ -94,17 +93,19 @@
           <div>
             <label class="block text-xs font-bold text-gray-700 mb-1">الألوان (اختياري - اتركه فارغاً إذا كان بدون ألوان)</label>
             <input type="text" id="prodColors" placeholder="مثال: أحمر, وردي, نيود" class="w-full px-3 py-2 text-sm border rounded-xl outline-none focus:border-pink-500">
-            <span class="text-[10px] text-gray-400">افصل بين الألوان بفارزة. إذا كان للمنتج لون واحد لا تكتب شيئاً.</span>
+          </div>
+
+          <!-- روابط الصور المتعددة -->
+          <div>
+            <label class="block text-xs font-bold text-gray-700 mb-1">روابط صور المنتج (صورة واحدة أو أكثر) *</label>
+            <textarea id="prodImages" rows="3" required placeholder="ضع رابط الصورة الأولى هنا...
+إذا عندك صور إضافية ضع كل رابط في سطر جديد أو افصل بينها بفاصلة" class="w-full px-3 py-2 text-xs border rounded-xl outline-none focus:border-pink-500" dir="ltr"></textarea>
+            <span class="text-[10px] text-gray-400">يمكنك وضع رابط واحد أو عدة روابط صور؛ لتسمح للزبون بالتمرير بينها.</span>
           </div>
 
           <div>
-            <label class="block text-xs font-bold text-gray-700 mb-1">رابط صورة المنتج (URL) *</label>
-            <input type="url" id="prodImage" required placeholder="https://..." class="w-full px-3 py-2 text-sm border rounded-xl outline-none focus:border-pink-500" dir="ltr">
-          </div>
-
-          <div>
-            <label class="block text-xs font-bold text-gray-700 mb-1">وصف المنتج</label>
-            <textarea id="prodDesc" rows="2" class="w-full px-3 py-2 text-sm border rounded-xl outline-none focus:border-pink-500"></textarea>
+            <label class="block text-xs font-bold text-gray-700 mb-1">وصف المنتج الكامل *</label>
+            <textarea id="prodDesc" rows="3" required placeholder="اكتب فوائد واستخدامات المنتج بالتفصيل ليقرأها الزبون في نافذة المنتج..." class="w-full px-3 py-2 text-sm border rounded-xl outline-none focus:border-pink-500"></textarea>
           </div>
 
           <div class="flex gap-2 pt-2">
@@ -135,7 +136,7 @@
       return window.btoa(unescape(encodeURIComponent(str)));
     }
     function base64ToUtf8(str) {
-      return decodeURIComponent(escape(window.atob(str)));
+      return decodeURIComponent(escape(window.atob(str.replace(/\s/g, ''))));
     }
 
     function toggleConfig() {
@@ -180,14 +181,16 @@
     }
 
     async function fetchLatestFromGitHub() {
-      const user = localStorage.getItem('km_gh_user');
-      const repo = localStorage.getItem('km_gh_repo') || 'kozmetik-almuhandis';
-      const token = localStorage.getItem('km_gh_token');
+      const user = (localStorage.getItem('km_gh_user') || '').trim();
+      const repo = (localStorage.getItem('km_gh_repo') || 'kozmetik-almuhandis').trim();
+      const token = (localStorage.getItem('km_gh_token') || '').trim();
+
+      const adminList = document.getElementById('adminList');
 
       if (!user || !token) {
-        document.getElementById('adminList').innerHTML = `
+        adminList.innerHTML = `
           <div class="bg-amber-50 border border-amber-200 p-6 rounded-2xl text-center text-amber-800 text-sm">
-            يرجى فتح <strong>إعدادات ربط لوحة التحكم</strong> في الأعلى وإدخال بيانات GitHub.
+            يرجى فتح <strong>إعدادات الربط السحابي</strong> في الأعلى وإدخال بيانات GitHub.
           </div>`;
         return;
       }
@@ -200,16 +203,18 @@
           }
         });
 
-        if (!res.ok) throw new Error();
+        if (res.status === 401) throw new Error('رمز Token غير صالح أو تم إلغاؤه، يرجى تجديده.');
+        if (res.status === 404) throw new Error('ملف products.json غير موجود في المستودع.');
+        if (!res.ok) throw new Error(`خطأ سيرفر: ${res.status}`);
 
         const data = await res.json();
         fileSha = data.sha;
         currentProducts = JSON.parse(base64ToUtf8(data.content));
         renderAdminList();
       } catch (e) {
-        document.getElementById('adminList').innerHTML = `
-          <div class="bg-red-50 border border-red-200 p-6 rounded-2xl text-center text-red-700 text-sm">
-            تعذر جلب المنتجات. تأكد من صحة رمز Token.
+        adminList.innerHTML = `
+          <div class="bg-red-50 border border-red-200 p-5 rounded-2xl text-center text-red-700 text-xs sm:text-sm font-bold">
+            ⚠️ ${e.message}
           </div>`;
       }
     }
@@ -226,16 +231,18 @@
       }
 
       currentProducts.forEach((p, idx) => {
+        const imgs = Array.isArray(p.images) && p.images.length > 0 ? p.images : (p.image ? [p.image] : ['https://placehold.co/100x100?text=صورة']);
         const item = document.createElement('div');
         item.className = "bg-white p-3.5 rounded-2xl border border-gray-200 flex items-center justify-between gap-3 shadow-sm";
         item.innerHTML = `
           <div class="flex items-center gap-3">
-            <img src="${p.image}" class="w-12 h-12 object-cover rounded-xl border">
+            <img src="${imgs[0]}" class="w-12 h-12 object-cover rounded-xl border">
             <div>
               <div class="flex items-center gap-2">
                 <h4 class="font-bold text-gray-900 text-sm">${p.name}</h4>
                 <span class="bg-gray-100 text-gray-600 text-[10px] font-bold px-2 py-0.5 rounded">${p.category || 'العناية بالبشره'}</span>
                 ${p.outOfStock ? '<span class="bg-pink-900 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">غير متوفر</span>' : ''}
+                ${imgs.length > 1 ? `<span class="bg-blue-50 text-blue-600 text-[10px] font-bold px-1.5 py-0.5 rounded">${imgs.length} صور</span>` : ''}
               </div>
               <p class="text-xs text-gray-500 font-semibold mt-0.5">
                 ${Number(p.price).toLocaleString()} د.ع ${p.colors?.length ? `| الألوان: ${p.colors.join(', ')}` : ''}
@@ -252,9 +259,9 @@
     }
 
     async function syncToGitHub(updatedList) {
-      const user = localStorage.getItem('km_gh_user');
-      const repo = localStorage.getItem('km_gh_repo');
-      const token = localStorage.getItem('km_gh_token');
+      const user = (localStorage.getItem('km_gh_user') || '').trim();
+      const repo = (localStorage.getItem('km_gh_repo') || 'kozmetik-almuhandis').trim();
+      const token = (localStorage.getItem('km_gh_token') || '').trim();
       const saveBtn = document.getElementById('saveBtn');
 
       saveBtn.disabled = true;
@@ -287,7 +294,7 @@
         resetForm();
         alert('تم تحديث ونشر المتجر بنجاح! 🚀');
       } catch (e) {
-        alert('حدث خطأ أثناء المزامنة، تأكد من الاتصال');
+        alert('حدث خطأ أثناء المزامنة، تأكد من الاتصال وصلاحيات Token');
       } finally {
         saveBtn.disabled = false;
         saveBtn.innerText = "حفظ ومزامنة";
@@ -306,7 +313,11 @@
       const rawColors = document.getElementById('prodColors').value.trim();
       const colors = rawColors ? rawColors.split(',').map(c => c.trim()).filter(Boolean) : [];
 
-      const image = document.getElementById('prodImage').value.trim();
+      // معالجة الصور المتعددة
+      const rawImages = document.getElementById('prodImages').value.trim();
+      const images = rawImages ? rawImages.split(/[\n,]+/).map(u => u.trim()).filter(Boolean) : [];
+      const image = images[0] || '';
+
       const description = document.getElementById('prodDesc').value.trim();
 
       let newList = [...currentProducts];
@@ -314,12 +325,12 @@
       if (id) {
         const idx = newList.findIndex(p => p.id == id);
         if (idx > -1) {
-          newList[idx] = { ...newList[idx], name, category, price, outOfStock, badge, colors, image, description };
+          newList[idx] = { ...newList[idx], name, category, price, outOfStock, badge, colors, image, images, description };
         }
       } else {
         newList.unshift({
           id: Date.now(),
-          name, category, price, outOfStock, badge, colors, image, description
+          name, category, price, outOfStock, badge, colors, image, images, description
         });
       }
 
@@ -336,7 +347,10 @@
       document.getElementById('prodOutOfStock').checked = p.outOfStock || false;
       document.getElementById('prodBadge').value = p.badge || '';
       document.getElementById('prodColors').value = (p.colors || []).join(', ');
-      document.getElementById('prodImage').value = p.image;
+
+      const imgs = Array.isArray(p.images) && p.images.length > 0 ? p.images : (p.image ? [p.image] : []);
+      document.getElementById('prodImages').value = imgs.join('\n');
+
       document.getElementById('prodDesc').value = p.description || '';
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
