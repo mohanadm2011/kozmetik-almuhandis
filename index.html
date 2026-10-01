@@ -32,7 +32,7 @@
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-    /* شريط متحرك مستمر لا نهائي وسريع من اليسار إلى اليمين بدون فراغات */
+    /* شريط متحرك مستمر لا نهائي وسرعة 15 ثانية من اليسار إلى اليمين */
     @keyframes marquee-ltr {
       0% { transform: translateX(-100%); }
       100% { transform: translateX(0%); }
@@ -46,7 +46,7 @@
       display: flex;
       align-items: center;
       flex-shrink: 0;
-      animation: marquee-ltr 10s linear infinite;
+      animation: marquee-ltr 15s linear infinite;
     }
     .marquee-track:hover .marquee-group {
       animation-play-state: paused;
@@ -116,23 +116,23 @@
     </div>
   </header>
 
-  <!-- الشريط الإخباري المتحرك (سريع، مستمر، وبدون فراغات) -->
+  <!-- الشريط الإخباري المتحرك (سلاسة مستمرة، 15 ثانية، بدون فراغات) -->
   <div class="bg-brand-pinkLight border-b border-pink-100 py-2.5 overflow-hidden" dir="ltr">
     <div class="marquee-track">
       <div class="marquee-group">
-        <span class="text-xs sm:text-sm font-black text-brand-pink px-6" dir="rtl">
+        <span class="text-xs sm:text-sm font-black text-brand-pink px-8" dir="rtl">
           ✨ عرض لفترة محدودة ، عند الطلب بقيمة 25000 دينار فاكثر يكون التوصيل مجاني لكافة انحاء العراق ✨
         </span>
-        <span class="text-xs sm:text-sm font-black text-brand-pink px-6" dir="rtl">
-          🌸 كوزمتك المهندس | منتجات أصلية 100% ودفع عند الاستلام 🌸
+        <span class="text-xs sm:text-sm font-black text-brand-pink px-8" dir="rtl">
+          ✨ عرض لفترة محدودة ، عند الطلب بقيمة 25000 دينار فاكثر يكون التوصيل مجاني لكافة انحاء العراق ✨
         </span>
       </div>
       <div class="marquee-group" aria-hidden="true">
-        <span class="text-xs sm:text-sm font-black text-brand-pink px-6" dir="rtl">
+        <span class="text-xs sm:text-sm font-black text-brand-pink px-8" dir="rtl">
           ✨ عرض لفترة محدودة ، عند الطلب بقيمة 25000 دينار فاكثر يكون التوصيل مجاني لكافة انحاء العراق ✨
         </span>
-        <span class="text-xs sm:text-sm font-black text-brand-pink px-6" dir="rtl">
-          🌸 كوزمتك المهندس | منتجات أصلية 100% ودفع عند الاستلام 🌸
+        <span class="text-xs sm:text-sm font-black text-brand-pink px-8" dir="rtl">
+          ✨ عرض لفترة محدودة ، عند الطلب بقيمة 25000 دينار فاكثر يكون التوصيل مجاني لكافة انحاء العراق ✨
         </span>
       </div>
     </div>
