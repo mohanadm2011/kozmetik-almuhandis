@@ -1,5 +1,19 @@
 [
   {
+    "id": 1792155378532,
+    "name": "مشط تخصيل كاربون مضاد للشحنات",
+    "category": "اكسسوارات",
+    "price": 1500,
+    "outOfStock": false,
+    "badge": "",
+    "colors": [],
+    "image": "https://github.com/mohanadm2011/kozmetik-almuhandis/blob/main/%D8%A7%D9%84%D9%85%D8%AA%D8%AC%D8%B1/steel%20comb.jpg?raw=true",
+    "images": [
+      "https://github.com/mohanadm2011/kozmetik-almuhandis/blob/main/%D8%A7%D9%84%D9%85%D8%AA%D8%AC%D8%B1/steel%20comb.jpg?raw=true"
+    ],
+    "description": "مشط تخصيل مضاد للشحنات الكهربائية مع سنارة حديد"
+  },
+  {
     "id": 1792155159800,
     "name": "مبرد اظافر حديد",
     "category": "اكسسوارات",
