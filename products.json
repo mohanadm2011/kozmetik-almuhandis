@@ -1,5 +1,20 @@
 [
   {
+    "id": 1792155159800,
+    "name": "مبرد اظافر حديد",
+    "category": "اكسسوارات",
+    "price": 1000,
+    "outOfStock": false,
+    "badge": "",
+    "colors": [],
+    "image": "https://github.com/mohanadm2011/kozmetik-almuhandis/blob/main/%D8%A7%D9%84%D9%85%D8%AA%D8%AC%D8%B1/nail%20tool.jpg?raw=true",
+    "images": [
+      "https://github.com/mohanadm2011/kozmetik-almuhandis/blob/main/%D8%A7%D9%84%D9%85%D8%AA%D8%AC%D8%B1/nail%20tool.jpg?raw=true",
+      "https://github.com/mohanadm2011/kozmetik-almuhandis/blob/main/%D8%A7%D9%84%D9%85%D8%AA%D8%AC%D8%B1/nail%20tool%202.jpg?raw=true"
+    ],
+    "description": "مبرد اظافر حديد مع اداة تنضيف تحت الاظفر"
+  },
+  {
     "id": 1792154974706,
     "name": "شفرات وجه مسننة من ماركة فلامنجو",
     "category": "اكسسوارات",
