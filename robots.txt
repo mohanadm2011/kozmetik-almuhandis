@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /admin.html
+
+# رابط خريطة الموقع الرسمية
+Sitemap: https://kozmetik-almuhandis.pages.dev/sitemap.xml
