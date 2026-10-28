@@ -450,11 +450,14 @@
     "name": "واقي شمس مع نسبة تبييض كوري 70 مل",
     "category": "العناية بالبشره",
     "price": 9000,
-    "outOfStock": false,
+    "outOfStock": true,
     "badge": "",
     "colors": [],
     "image": "https://i.imgur.com/QeSX1kl.jpeg",
-    "description": "واقي ومبيض للبشرة بنفس الوقت\nيحمي من اشعة الشمس ويمنح البشرة لوناً مشرقاً"
+    "description": "واقي ومبيض للبشرة بنفس الوقت\nيحمي من اشعة الشمس ويمنح البشرة لوناً مشرقاً",
+    "images": [
+      "https://i.imgur.com/QeSX1kl.jpeg"
+    ]
   },
   {
     "id": 1790891334382,
