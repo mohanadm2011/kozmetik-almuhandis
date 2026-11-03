@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>لوحة التحكم السحابية | كوزمتك المهندس</title>
+  <title>لوحة التحكم السحابية | كوزمتك ايوان</title>
   <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;600;800;900&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <style>body { font-family: 'Tajawal', sans-serif; background-color: #f9fafb; }</style>
@@ -41,12 +41,29 @@
     <!-- الترويسة -->
     <div class="bg-white p-5 rounded-3xl border border-gray-200 shadow-sm flex flex-col sm:flex-row justify-between items-center gap-4">
       <div>
-        <h1 class="text-xl sm:text-2xl font-black text-gray-900">إدارة منتجات كوزمتك المهندس</h1>
-        <p class="text-xs text-gray-500">إضافة صور متعددة، الأقسام، العروض، وحالة التوفر</p>
+        <h1 class="text-xl sm:text-2xl font-black text-gray-900">إدارة متجر كوزمتك ايوان</h1>
+        <p class="text-xs text-gray-500">إدارة البنر المتحرك، المنتجات، الصور المتعددة، وحالة التوفر</p>
       </div>
       <div class="flex gap-2 w-full sm:w-auto">
         <a href="index.html" class="flex-1 sm:flex-initial text-center px-4 py-2 border border-gray-300 rounded-xl text-xs font-bold text-gray-700 hover:bg-gray-50">عرض المتجر</a>
         <button onclick="fetchLatestFromGitHub()" class="flex-1 sm:flex-initial px-4 py-2 bg-gray-100 text-gray-800 rounded-xl text-xs font-bold hover:bg-gray-200">🔄 تحديث</button>
+      </div>
+    </div>
+
+    <!-- قسم إدارة صور البنر المتحرك أعلى الموقع -->
+    <div class="bg-white p-5 rounded-3xl border border-pink-200 shadow-sm space-y-3">
+      <div class="flex items-center justify-between">
+        <div>
+          <h2 class="text-sm sm:text-base font-extrabold text-gray-900">🖼️ صور البنر الإعلاني المتقلب (أعلى الموقع وفوق الأقسام)</h2>
+          <p class="text-xs text-gray-500">ضع روابط الصور التي تريد عرضها في أعلى المتجر (كل رابط في سطر جديد)</p>
+        </div>
+      </div>
+      <textarea id="bannerLinksInput" rows="3" placeholder="ضع رابط الصورة الأولى هنا...
+ضع رابط الصورة الثانية هنا..." class="w-full px-3 py-2 text-xs border rounded-xl outline-none focus:border-pink-500" dir="ltr"></textarea>
+      <div class="flex justify-end">
+        <button onclick="saveBanners()" id="saveBannersBtn" class="bg-pink-600 hover:bg-pink-700 text-white font-bold px-5 py-2 rounded-xl text-xs transition">
+          حفظ ومزامنة صور البنر
+        </button>
       </div>
     </div>
 
@@ -100,7 +117,7 @@
             <label class="block text-xs font-bold text-gray-700 mb-1">روابط صور المنتج (صورة واحدة أو أكثر) *</label>
             <textarea id="prodImages" rows="3" required placeholder="ضع رابط الصورة الأولى هنا...
 إذا عندك صور إضافية ضع كل رابط في سطر جديد أو افصل بينها بفاصلة" class="w-full px-3 py-2 text-xs border rounded-xl outline-none focus:border-pink-500" dir="ltr"></textarea>
-            <span class="text-[10px] text-gray-400">يمكنك وضع رابط واحد أو عدة روابط صور؛ لتسمح للزبون بالتمرير بينها.</span>
+            <span class="text-[10px] text-gray-400">عند إضافة أكثر من صورة ستظهر دوائر تنقل تحت صورة المنتج.</span>
           </div>
 
           <div>
@@ -130,6 +147,7 @@
 
   <script>
     let currentProducts = [];
+    let currentBanners = [];
     let fileSha = "";
 
     function utf8ToBase64(str) {
@@ -209,7 +227,13 @@
 
         const data = await res.json();
         fileSha = data.sha;
-        currentProducts = JSON.parse(base64ToUtf8(data.content));
+        const rawList = JSON.parse(base64ToUtf8(data.content));
+
+        const bannerObj = rawList.find(item => item.id === 'SITE_BANNERS_CONFIG' || item.isBannerConfig === true);
+        currentBanners = (bannerObj && Array.isArray(bannerObj.images)) ? bannerObj.images : [];
+        document.getElementById('bannerLinksInput').value = currentBanners.join('\n');
+
+        currentProducts = rawList.filter(item => item.id !== 'SITE_BANNERS_CONFIG' && !item.isBannerConfig);
         renderAdminList();
       } catch (e) {
         adminList.innerHTML = `
@@ -238,7 +262,7 @@
           <div class="flex items-center gap-3">
             <img src="${imgs[0]}" class="w-12 h-12 object-cover rounded-xl border">
             <div>
-              <div class="flex items-center gap-2">
+              <div class="flex items-center gap-2 flex-wrap">
                 <h4 class="font-bold text-gray-900 text-sm">${p.name}</h4>
                 <span class="bg-gray-100 text-gray-600 text-[10px] font-bold px-2 py-0.5 rounded">${p.category || 'العناية بالبشره'}</span>
                 ${p.outOfStock ? '<span class="bg-pink-900 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">غير متوفر</span>' : ''}
@@ -249,7 +273,7 @@
               </p>
             </div>
           </div>
-          <div class="flex items-center gap-1.5">
+          <div class="flex items-center gap-1.5 shrink-0">
             <button onclick="editItem(${idx})" class="px-3 py-1 bg-gray-100 hover:bg-gray-200 text-xs font-bold rounded-lg">تعديل</button>
             <button onclick="deleteItem(${idx})" class="px-3 py-1 bg-red-50 hover:bg-red-100 text-red-600 text-xs font-bold rounded-lg">حذف</button>
           </div>
@@ -258,17 +282,28 @@
       });
     }
 
-    async function syncToGitHub(updatedList) {
+    async function syncToGitHub(updatedProducts, updatedBanners = currentBanners) {
       const user = (localStorage.getItem('km_gh_user') || '').trim();
       const repo = (localStorage.getItem('km_gh_repo') || 'kozmetik-almuhandis').trim();
       const token = (localStorage.getItem('km_gh_token') || '').trim();
       const saveBtn = document.getElementById('saveBtn');
+      const saveBannersBtn = document.getElementById('saveBannersBtn');
 
       saveBtn.disabled = true;
+      saveBannersBtn.disabled = true;
       saveBtn.innerText = "جاري النشر والمزامنة...";
 
       try {
-        const jsonString = JSON.stringify(updatedList, null, 2);
+        const payloadList = [...updatedProducts];
+        if (updatedBanners && updatedBanners.length > 0) {
+          payloadList.push({
+            id: "SITE_BANNERS_CONFIG",
+            isBannerConfig: true,
+            images: updatedBanners
+          });
+        }
+
+        const jsonString = JSON.stringify(payloadList, null, 2);
         const contentBase64 = utf8ToBase64(jsonString);
 
         const res = await fetch(`https://api.github.com/repos/${user}/${repo}/contents/products.json`, {
@@ -279,7 +314,7 @@
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
-            message: 'Update products catalog',
+            message: 'Update store catalog and banners',
             content: contentBase64,
             sha: fileSha
           })
@@ -289,7 +324,8 @@
 
         const resData = await res.json();
         fileSha = resData.content.sha;
-        currentProducts = updatedList;
+        currentProducts = updatedProducts;
+        currentBanners = updatedBanners;
         renderAdminList();
         resetForm();
         alert('تم تحديث ونشر المتجر بنجاح! 🚀');
@@ -297,8 +333,15 @@
         alert('حدث خطأ أثناء المزامنة، تأكد من الاتصال وصلاحيات Token');
       } finally {
         saveBtn.disabled = false;
+        saveBannersBtn.disabled = false;
         saveBtn.innerText = "حفظ ومزامنة";
       }
+    }
+
+    function saveBanners() {
+      const raw = document.getElementById('bannerLinksInput').value.trim();
+      const banners = raw ? raw.split(/[\n,]+/).map(u => u.trim()).filter(Boolean) : [];
+      syncToGitHub(currentProducts, banners);
     }
 
     function handleProductSubmit(e) {
@@ -313,7 +356,6 @@
       const rawColors = document.getElementById('prodColors').value.trim();
       const colors = rawColors ? rawColors.split(',').map(c => c.trim()).filter(Boolean) : [];
 
-      // معالجة الصور المتعددة
       const rawImages = document.getElementById('prodImages').value.trim();
       const images = rawImages ? rawImages.split(/[\n,]+/).map(u => u.trim()).filter(Boolean) : [];
       const image = images[0] || '';
@@ -334,7 +376,7 @@
         });
       }
 
-      syncToGitHub(newList);
+      syncToGitHub(newList, currentBanners);
     }
 
     function editItem(idx) {
@@ -359,7 +401,7 @@
       if (confirm('هل أنت متأكد من حذف هذا المنتج؟')) {
         let newList = [...currentProducts];
         newList.splice(idx, 1);
-        syncToGitHub(newList);
+        syncToGitHub(newList, currentBanners);
       }
     }
 
