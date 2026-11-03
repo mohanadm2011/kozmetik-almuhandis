@@ -2,16 +2,16 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <!-- الصفحة الرئيسية للمتجر -->
   <url>
-    <loc>https://kozmetik-almuhandis.pages.dev/</loc>
-    <lastmod>2026-10-21</lastmod>
+    <loc>https://iwan-cosmetics.pages.dev/</loc>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
 
-  <!-- كتالوج المنتجات وقاعدة البيانات -->
+  <!-- كتالوج المنتجات -->
   <url>
-    <loc>https://kozmetik-almuhandis.pages.dev/products.json</loc>
-    <lastmod>2026-10-21</lastmod>
+    <loc>https://iwan-cosmetics.pages.dev/products.json</loc>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
