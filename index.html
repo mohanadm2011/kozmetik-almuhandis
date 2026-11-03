@@ -70,7 +70,7 @@
               mid: '#D4A0A0',       // Mid Rose Gold (للإطارات والشارات)
               blush: '#EECFCF',     // Pale Blush
               white: '#FAF0EF',     // Rose White (للخلفيات الهادئة)
-              dark: '#2B1B20'       // لون نص داكن متناغم مع الباليت
+              dark: '#2B1B20'       // لون نص داكن متناغم
             }
           }
         }
@@ -113,7 +113,7 @@
     </button>
   </div>
 
-  <!-- القائمة الجانبية المنزلقة (تم حذف الإيموجيات وترك النصوص نقية) -->
+  <!-- القائمة الجانبية المنزلقة (نصوص أنيقة بدون إيموجيات) -->
   <div id="sideMenuModal" class="fixed inset-0 z-50 overflow-hidden hidden">
     <div class="absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity" onclick="toggleSideMenu(false)"></div>
     <div class="fixed inset-y-0 right-0 max-w-full flex">
@@ -175,11 +175,11 @@
     </div>
   </div>
 
-  <!-- الهيدر الرئيسي: شفاف ضبابي (Blur)، ثابت دائماً (Sticky)، واسم الموقع في منتصف المسافة بين القائمة والواتساب -->
+  <!-- الهيدر الرئيسي: شفاف ضبابي، ثابت دائماً، واسم المتجر في منتصف المسافة بين القائمة والواتساب -->
   <header class="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-rosegold-blush/70 shadow-sm transition-all duration-300">
     <div class="max-w-7xl mx-auto px-2.5 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
       
-      <!-- الجانب الأيمن: زر القائمة -->
+      <!-- زر القائمة -->
       <div class="flex items-center shrink-0">
         <button onclick="toggleSideMenu(true)" class="flex items-center gap-1.5 sm:gap-2 px-2.5 py-2 sm:px-3.5 sm:py-2 rounded-2xl border border-rosegold-blush hover:border-rosegold-deep text-rosegold-dark hover:text-rosegold-deep transition shadow-sm bg-white/90">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 sm:h-6 sm:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -189,13 +189,13 @@
         </button>
       </div>
 
-      <!-- منتصف المسافة بين زر القائمة وأيقونة الواتساب: اسم المتجر -->
+      <!-- اسم المتجر في المنتصف تماماً بين القائمة والواتساب -->
       <div class="flex-1 flex flex-col items-center justify-center text-center px-2 cursor-pointer" onclick="window.scrollTo({top:0, behavior:'smooth'})">
         <h1 class="text-base sm:text-2xl font-black tracking-tight text-rosegold-deep leading-tight whitespace-nowrap">كوزمتك ايوان</h1>
         <p class="text-[10px] sm:text-xs text-rosegold-warm font-semibold mt-0.5 hidden sm:block">عناية، جمال، وأصالة</p>
       </div>
 
-      <!-- الجانب الأيسر: يبدأ فوراً بأيقونة الواتساب وباقي الأيقونات -->
+      <!-- أيقونات التواصل والسلة -->
       <div class="flex items-center justify-end gap-1 sm:gap-2 shrink-0">
         
         <!-- أيقونة واتساب -->
@@ -285,43 +285,43 @@
     </div>
   </section>
 
-  <!-- الأقسام الدائرية: دوائر بالصور وتحتها الاسم (مطابقة لتصميم الصورة الثالثة) -->
+  <!-- الأقسام الدائرية: صور استوديو احترافية ومضمونة الظهور وتحتها اسم القسم -->
   <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 w-full">
     <div class="flex items-center justify-start sm:justify-center gap-4 sm:gap-7 overflow-x-auto no-scrollbar py-2 px-1">
       
       <!-- قسم الكل -->
       <button onclick="filterCategory('الكل')" class="cat-item active group flex flex-col items-center gap-2 shrink-0 cursor-pointer" data-category="الكل">
         <div class="cat-img-wrap w-16 h-16 sm:w-20 sm:h-20 rounded-full overflow-hidden p-1 border-2 border-rosegold-deep bg-white shadow-md transition-all group-hover:scale-105">
-          <img src="https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=300&auto=format&fit=crop&q=80" alt="الكل" class="w-full h-full object-cover rounded-full">
+          <img src="https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=300&auto=format&fit=crop&q=80" alt="الكل" class="w-full h-full object-cover rounded-full">
         </div>
         <span class="cat-label text-xs sm:text-sm font-black text-rosegold-deep transition-colors">الكل</span>
       </button>
 
-      <!-- العناية بالبشرة -->
+      <!-- العناية بالبشرة (صورة سيروم استوديو فاخرة ومضمونة 100%) -->
       <button onclick="filterCategory('العناية بالبشره')" class="cat-item group flex flex-col items-center gap-2 shrink-0 cursor-pointer" data-category="العناية بالبشره">
         <div class="cat-img-wrap w-16 h-16 sm:w-20 sm:h-20 rounded-full overflow-hidden p-1 border border-rosegold-blush bg-white shadow-sm transition-all group-hover:scale-105 group-hover:border-rosegold-deep">
-          <img src="https://images.unsplash.com/photo-1608248597359-59756644d57c?w=300&auto=format&fit=crop&q=80" alt="العناية بالبشره" class="w-full h-full object-cover rounded-full">
+          <img src="https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=300&auto=format&fit=crop&q=80" alt="العناية بالبشره" class="w-full h-full object-cover rounded-full">
         </div>
         <span class="cat-label text-xs sm:text-sm font-bold text-rosegold-dark group-hover:text-rosegold-deep transition-colors">العناية بالبشره</span>
       </button>
 
-      <!-- العناية بالشعر -->
+      <!-- العناية بالشعر (صورة استوديو لمنتجات وزيوت الشعر مع مشط أنيق) -->
       <button onclick="filterCategory('العنايه بالشعر')" class="cat-item group flex flex-col items-center gap-2 shrink-0 cursor-pointer" data-category="العنايه بالشعر">
         <div class="cat-img-wrap w-16 h-16 sm:w-20 sm:h-20 rounded-full overflow-hidden p-1 border border-rosegold-blush bg-white shadow-sm transition-all group-hover:scale-105 group-hover:border-rosegold-deep">
-          <img src="https://images.unsplash.com/photo-1527799820374-dcf8d9d4a388?w=300&auto=format&fit=crop&q=80" alt="العنايه بالشعر" class="w-full h-full object-cover rounded-full">
+          <img src="https://images.unsplash.com/photo-1535585209827-a15fcdbc4c2d?w=300&auto=format&fit=crop&q=80" alt="العنايه بالشعر" class="w-full h-full object-cover rounded-full">
         </div>
         <span class="cat-label text-xs sm:text-sm font-bold text-rosegold-dark group-hover:text-rosegold-deep transition-colors">العنايه بالشعر</span>
       </button>
 
-      <!-- العناية بالجسم -->
+      <!-- العناية بالجسم (صورة لوشن وترطيب جسم استوديو راقية) -->
       <button onclick="filterCategory('العنايه بالجسم')" class="cat-item group flex flex-col items-center gap-2 shrink-0 cursor-pointer" data-category="العنايه بالجسم">
         <div class="cat-img-wrap w-16 h-16 sm:w-20 sm:h-20 rounded-full overflow-hidden p-1 border border-rosegold-blush bg-white shadow-sm transition-all group-hover:scale-105 group-hover:border-rosegold-deep">
-          <img src="https://images.unsplash.com/photo-1556228720-195a672e8a03?w=300&auto=format&fit=crop&q=80" alt="العنايه بالجسم" class="w-full h-full object-cover rounded-full">
+          <img src="https://images.unsplash.com/photo-1571781926291-c477ebfd024b?w=300&auto=format&fit=crop&q=80" alt="العنايه بالجسم" class="w-full h-full object-cover rounded-full">
         </div>
         <span class="cat-label text-xs sm:text-sm font-bold text-rosegold-dark group-hover:text-rosegold-deep transition-colors">العنايه بالجسم</span>
       </button>
 
-      <!-- المكياج -->
+      <!-- المكياج (صورة حمرة روج كوزمتك فخمة) -->
       <button onclick="filterCategory('المكياج')" class="cat-item group flex flex-col items-center gap-2 shrink-0 cursor-pointer" data-category="المكياج">
         <div class="cat-img-wrap w-16 h-16 sm:w-20 sm:h-20 rounded-full overflow-hidden p-1 border border-rosegold-blush bg-white shadow-sm transition-all group-hover:scale-105 group-hover:border-rosegold-deep">
           <img src="https://images.unsplash.com/photo-1586495777744-4413f21062fa?w=300&auto=format&fit=crop&q=80" alt="المكياج" class="w-full h-full object-cover rounded-full">
@@ -329,10 +329,10 @@
         <span class="cat-label text-xs sm:text-sm font-bold text-rosegold-dark group-hover:text-rosegold-deep transition-colors">المكياج</span>
       </button>
 
-      <!-- اكسسوارات -->
+      <!-- اكسسوارات (أدوات وفرش تجميل متناغمة بالروز جولد) -->
       <button onclick="filterCategory('اكسسوارات')" class="cat-item group flex flex-col items-center gap-2 shrink-0 cursor-pointer" data-category="اكسسوارات">
         <div class="cat-img-wrap w-16 h-16 sm:w-20 sm:h-20 rounded-full overflow-hidden p-1 border border-rosegold-blush bg-white shadow-sm transition-all group-hover:scale-105 group-hover:border-rosegold-deep">
-          <img src="https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=300&auto=format&fit=crop&q=80" alt="اكسسوارات" class="w-full h-full object-cover rounded-full">
+          <img src="https://images.unsplash.com/photo-1512496015851-a90fb38ba796?w=300&auto=format&fit=crop&q=80" alt="اكسسوارات" class="w-full h-full object-cover rounded-full">
         </div>
         <span class="cat-label text-xs sm:text-sm font-bold text-rosegold-dark group-hover:text-rosegold-deep transition-colors">اكسسوارات</span>
       </button>
