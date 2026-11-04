@@ -1,6 +1,6 @@
 User-agent: *
 Allow: /
-Disallow: /admin.html
+Disallow: /admin.html 
 
 # رابط خريطة الموقع الرسمية
 Sitemap: https://iwan-cosmetics.pages.dev/sitemap.xml
